@@ -1,75 +1,252 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Sorry Buggi ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-body {
-  margin:0;
-  background:#ffd6e7;
-  overflow:hidden;
-  font-family:'Poppins',sans-serif;
-  color:#fff;
-  text-align:center;
-}
-#musicBtn{
-  position:absolute;top:20px;right:20px;
-  padding:10px 20px;border-radius:20px;
-  background:#ff4f9a;border:none;color:white;font-size:18px;
-}
-.message{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:80%;font-size:22px;color:#b3005c;
-  background:white;padding:20px;border-radius:20px;
-  box-shadow:0 0 20px rgba(255,0,120,0.4);
-}
-.balloon{
-  position:absolute;
-  width:80px;height:100px;
-  background:#ff8ccf;
-  border-radius:50% 50% 45% 45%;
-  box-shadow:0 0 15px #ff4fae;
-  cursor:pointer;
-  animation:float 6s infinite ease-in-out;
-}
-@keyframes float{
-  0%{transform:translateY(0);}
-  50%{transform:translateY(-40px);}
-  100%{transform:translateY(0);}
-}
+  :root{
+    --bg1: #fff0f5;
+    --bg2: #ffd9e6;
+    --accent: #ff4f9a;
+    --muted: #6b2740;
+    --card-bg: rgba(255,255,255,0.88);
+    --trans-heart: rgba(255,80,140,0.18);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));overflow:hidden;color:var(--muted)}
+
+  /* Intro overlay */
+  .intro{
+    position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:120;background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,230,240,0.4));backdrop-filter: blur(6px);
+    flex-direction:column;padding:22px;text-align:center;transition:opacity .35s cubic-bezier(.2,.9,.2,1), transform .35s;
+  }
+  .intro h1{font-size:2.2rem;margin:0 0 10px;color:var(--accent);text-shadow:0 8px 30px rgba(255,110,160,0.25)}
+  .intro p{margin:0 0 18px;color:var(--muted)}
+  .btn-open{background:linear-gradient(90deg,#ff8bb5,#ff547c);border:none;padding:12px 24px;border-radius:999px;color:white;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(255,100,150,0.18);font-size:16px}
+
+  /* glowing lights */
+  .glow-wrap{position:fixed;inset:0;pointer-events:none;z-index:1}
+  .glow{position:absolute;border-radius:50%;filter:blur(40px);opacity:0.7;mix-blend-mode:screen}
+
+  /* card */
+  .wrap{position:relative;z-index:10;height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+  .card{position:relative;width:92%;max-width:720px;padding:28px;border-radius:20px;background:var(--card-bg);box-shadow:0 14px 60px rgba(255,110,150,0.12);backdrop-filter: blur(6px);overflow:visible}
+  .card h2{margin:0 0 8px;color:#d61b6b;font-size:1.6rem}
+  .card .text{color:var(--muted);line-height:1.6;font-size:1.05rem;min-height:110px}
+  .from{margin-top:12px;font-weight:700;color:#7a2540}
+
+  /* pulsing heart behind card */
+  .pulse-heart{position:absolute;right:18px;top:12px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,#fff,#ffd6ea);filter:blur(8px);opacity:0.25;transform:scale(1);animation:pulse 2200ms infinite;z-index:-1}
+  @keyframes pulse{0%{transform:scale(0.95);opacity:0.22}50%{transform:scale(1.08);opacity:0.36}100%{transform:scale(0.95);opacity:0.22}}
+
+  /* balloons */
+  .balloon{position:absolute;width:86px;height:110px;border-radius:50% 50% 45% 45%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 12px 30px rgba(255,110,150,0.18);transform-origin:center bottom}
+  .string{position:absolute;height:70px;width:3px;background:linear-gradient(#ffa3c1,#ff7aa5);left:50%;transform:translateX(-50%);bottom:-65px;border-radius:2px}
+  @keyframes bob{0%{transform:translateY(0)}50%{transform:translateY(-28px)}100%{transform:translateY(0)}}
+
+  /* floating hearts */
+  .heart{position:fixed;font-size:18px;opacity:0.9;pointer-events:none;transition:opacity .25s, transform .25s}
+  .heart.transparent{mix-blend-mode:screen;opacity:0.35;color:var(--accent)}
+  .heart.hidden-on-card{opacity:0.18;filter:blur(0.8px)}
+
+  /* pop animation */
+  .pop{animation:pop 420ms forwards}
+  @keyframes pop{0%{transform:scale(1)}60%{transform:scale(1.12)}100%{transform:scale(0);opacity:0}}
+
+  /* note popup */
+  .note{position:fixed;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,0.92);box-shadow:0 6px 18px rgba(0,0,0,0.08);font-weight:700;pointer-events:none;color:var(--accent)}
+
+  /* music button */
+  #musicBtn{position:fixed;top:18px;right:18px;padding:10px 14px;border-radius:18px;background:linear-gradient(90deg,#ff9ac8,#ff587f);border:none;color:white;font-weight:700;z-index:130;cursor:pointer;box-shadow:0 8px 30px rgba(255,100,150,0.18)}
+
+  @media (max-width:520px){.card{padding:18px;border-radius:16px}.intro h1{font-size:1.6rem}}
+
+  /* typewriter cursor */
+  .typewriter{display:inline-block;white-space:pre-wrap;overflow:hidden}
+  .cursor{display:inline-block;background:var(--accent);width:8px;height:20px;vertical-align:middle;margin-left:6px;border-radius:2px;animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+
 </style>
 </head>
 <body>
 
-<button id="musicBtn">Play Music 🎵</button>
-
-<div class="message">
-<b>To Buggi don ❤️</b><br><br>
-I really love you so muchhh Buggi and don't wanna lose you because you made me smile and stronger and helped me in my lows.. I wanna grow with you — together we will conquer the world. Jokes aside, I wanna see you successful… I will always stay behind you to support you in your lows and enjoy with you in your highs. I'm not leaving you till my last breath. These are not just words — I mean it.<br><br>
-I love you so much Buggi 🥰🫂❤️<br><br>
-<b>— Your Bugga ❤️🫂</b>
+<!-- Intro -->
+<div class="intro" id="intro">
+  <h1>Tap to open my heart ❤️</h1>
+  <p>For my Buggi — please accept this little sorry and all my love.</p>
+  <button class="btn-open" id="openBtn">Open my heart</button>
 </div>
 
-<audio id="bgm" loop>
+<button id="musicBtn" aria-label="Play music">Play Music 🎵</button>
+
+<div class="glow-wrap" aria-hidden="true">
+  <div class="glow" style="left:6%;top:8%;background:radial-gradient(circle,#fff3f8, #ffc8e0);width:300px;height:300px;opacity:0.7"></div>
+  <div class="glow" style="right:8%;bottom:6%;background:radial-gradient(circle,#fff7fb,#ffdfee);width:360px;height:360px;opacity:0.6"></div>
+  <div class="glow" style="left:34%;top:62%;background:radial-gradient(circle,#ffeaf4,#ffcfe6);width:200px;height:200px;opacity:0.55"></div>
+</div>
+
+<div class="wrap">
+  <div class="card" id="card" aria-live="polite">
+    <div class="pulse-heart" aria-hidden="true"></div>
+    <h2>To Buggi Don ❤️</h2>
+    <div class="text typewriter" id="apology"></div><span class="cursor" id="cursor" aria-hidden="true"></span>
+    <div class="from">From — Your Bugga ❤️🫂</div>
+  </div>
+</div>
+
+<!-- Container for balloons/hearts -->
+<div id="stage" aria-hidden="true"></div>
+
+<audio id="bgm" loop preload="auto">
   <source src="Perfect-(Mr-Jat.in).mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const audio = document.getElementById("bgm");
-document.getElementById("musicBtn").onclick = ()=>audio.play();
+/* -------------------------
+   Typewriter & audio logic
+   ------------------------- */
+const apologyText = "I really love you so muchhh Buggi and don't wanna lose you because you made me smile and stronger and also helped me in my lows.. I wanna grow with you. Together we will conquer the world. Jokes aside, I wanna see you successful in your life. I always wanna stay behind you to support you in your lows and enjoy moments with you in your highs. I am not leaving you till my last breath.. these are not just words, I mean it... I love you so much Buggi 🥰🫂❤️";
 
-// Generate balloons
-for(let i=0;i<15;i++){
-  let b=document.createElement("div");
-  b.className="balloon";
-  b.style.left=Math.random()*90+"%";
-  b.style.top=Math.random()*90+"%";
-  b.onclick=()=>alert("Buggiii ❤️");
-  document.body.appendChild(b);
+const el = document.getElementById('apology');
+const cursor = document.getElementById('cursor');
+let idx = 0, typingSpeed = 26;
+
+function typeWriterStep(){
+  if(idx <= apologyText.length){
+    el.textContent = apologyText.slice(0, idx);
+    idx++;
+    setTimeout(typeWriterStep, typingSpeed);
+  } else {
+    cursor.style.display = 'none';
+  }
 }
-</script>
+function startTypewriter(){
+  idx = 0; el.textContent = ''; cursor.style.display = 'inline-block';
+  setTimeout(typeWriterStep, 220);
+}
 
+const audio = document.getElementById('bgm');
+let audioStarted = false;
+function startAudioOnce(){
+  if(audioStarted) return;
+  audioStarted = true;
+  audio.play().catch(()=>{}); // some browsers block until user gesture
+  document.getElementById('musicBtn').textContent = 'Pause Music ⏸️';
+}
+function toggleAudio(){
+  if(audio.paused){ audio.play(); document.getElementById('musicBtn').textContent = 'Pause Music ⏸️'; }
+  else{ audio.pause(); document.getElementById('musicBtn').textContent = 'Play Music 🎵'; }
+}
+document.getElementById('musicBtn').addEventListener('click', ()=>{ startAudioOnce(); toggleAudio(); });
+
+document.getElementById('openBtn').addEventListener('click', ()=>{
+  const intro = document.getElementById('intro');
+  intro.style.opacity = 0; intro.style.transform = 'scale(.98)';
+  setTimeout(()=>intro.remove(),380);
+  startAudioOnce();
+  startTypewriter();
+});
+// also start on first touch anywhere for mobile convenience
+window.addEventListener('pointerdown', ()=>{ startAudioOnce(); }, {once:true});
+
+/* -------------------------
+   Floating hearts & balloons
+   ------------------------- */
+const stage = document.getElementById('stage');
+const card = document.getElementById('card');
+
+function spawnHeart(){
+  const h = document.createElement('div');
+  h.className = 'heart';
+  h.innerText = (Math.random() > 0.45) ? '❤️' : '💕';
+  h.style.left = (10 + Math.random()*80) + 'vw';
+  h.style.top = (80 + Math.random()*15) + 'vh';
+  h.style.fontSize = (12 + Math.random()*26) + 'px';
+  document.body.appendChild(h);
+
+  const dx = (Math.random()*120 - 60);
+  const rot = (Math.random()*100 - 50);
+
+  // 🔧 FIXED LINE:
+  h.style.transform = `translate(${dx}px, -120vh) rotate(${rot}deg)`;
+  h.style.opacity = 0;
+
+  setTimeout(()=>{
+    h.style.transform = `translate(${dx}px, -120vh) rotate(${rot}deg)`;
+    h.style.opacity = 0;
+  }, 60);
+
+  setTimeout(()=>h.remove(),7000);
+}
+
+setInterval(spawnHeart, 900);
+
+function createBalloon(x, y){
+  const b = document.createElement('div');
+  b.className = 'balloon';
+  b.style.left = x + 'vw'; b.style.top = y + 'vh';
+  b.style.background = 'linear-gradient(180deg,#ffd6ea,#ff9ac4)';
+  b.style.animation = 'bob ' + (4 + Math.random()*3) + 's ease-in-out infinite';
+  const s = document.createElement('div'); s.className = 'string'; b.appendChild(s);
+  stage.appendChild(b);
+  b.addEventListener('click', (ev)=>{ popBalloon(b, ev.clientX, ev.clientY); });
+}
+for(let i=0;i<12;i++){ createBalloon(5 + Math.random()*90, 18 + Math.random()*72); }
+
+function popBalloon(balloon, x, y){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator(); const g = ctx.createGain(); osc.type='triangle'; osc.frequency.value=700; g.gain.value=0.05;
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime+0.12); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.13);
+    setTimeout(()=>{osc.stop(); ctx.close()},180);
+  }catch(e){}
+  balloon.classList.add('pop');
+  for(let i=0;i<10;i++){
+    const p = document.createElement('div'); p.className = 'heart';
+    p.innerText = '❤️';
+    p.style.left = (x + (Math.random()*120 - 60)) + 'px';
+    p.style.top = (y + (Math.random()*120 - 60)) + 'px';
+    p.style.fontSize = (10 + Math.random()*18) + 'px';
+    p.style.opacity = 1;
+    p.style.transition = 'transform 900ms ease-out, opacity 900ms ease-out';
+    document.body.appendChild(p);
+    setTimeout(()=>{ p.style.transform = 'translateY(-120px) scale(1.2)'; p.style.opacity = 0; }, 30);
+    setTimeout(()=> p.remove(), 1000);
+  }
+  const note = document.createElement('div'); note.className='note'; note.innerText = 'Buggiii ❤️';
+  note.style.left = (x + 10) + 'px'; note.style.top = (y - 30) + 'px'; document.body.appendChild(note);
+  setTimeout(()=>{ note.style.transform = 'translateY(-40px)'; note.style.opacity = 0; }, 700);
+  setTimeout(()=> note.remove(), 1200);
+  setTimeout(()=> balloon.remove(), 350);
+}
+
+/* -------------------------
+   Hearts transparency over card
+   ------------------------- */
+function updateHeartsTransparency(){
+  const hearts = document.querySelectorAll('.heart');
+  const cardRect = card.getBoundingClientRect();
+  hearts.forEach(h => {
+    const rect = h.getBoundingClientRect();
+    const overlap = !(rect.right < cardRect.left || rect.left > cardRect.right || rect.bottom < cardRect.top || rect.top > cardRect.bottom);
+    if(overlap){
+      h.classList.add('hidden-on-card');
+    } else {
+      h.classList.remove('hidden-on-card');
+    }
+  });
+}
+setInterval(updateHeartsTransparency, 120);
+
+/* keyboard accessibility: press Space to pop a balloon */
+window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ const bl = document.querySelector('.balloon'); if(bl){ popBalloon(bl, window.innerWidth/2, window.innerHeight/2); }}});
+
+/* convenience: start typewriter/audio at first pointerdown */
+window.addEventListener('pointerdown', function once(){ startAudioOnce(); startTypewriter(); window.removeEventListener('pointerdown', once); });
+
+</script>
 </body>
 </html>
