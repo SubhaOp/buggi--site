@@ -455,8 +455,9 @@
   </div>
 </div>
 
-<audio id="bgMusic" loop>
-  <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Heartwarming/Heartwarming_-_Kevin_MacLeod.mp3" type="audio/mpeg">
+<!-- 🔊 Use your local song file here -->
+<audio id="bgMusic" preload="auto" loop>
+  <source src="Perfect-(Mr-Jat.in).mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -464,11 +465,11 @@
    Typewriter apology text
    ------------------------- */
 const fullMessage = [
-  To
+`To
 Buggi don
 I really love you so muchhh Buggi and don't wanna loose you because you made me smile and stronger and also helped me in my lows..I wanna grow with you together we will conquer the world jokes aside i wanna see you successful in your life i wanna always stay behind you to support you in your lows and enjoy moments with you in your highs i m not leaving you till me last breath.. these are not just words i mean it...i love you so much buggi 🥰🫂❤️
 From
-Your bugga❤️🫂
+Your bugga❤️🫂`
 ].join("\n");
 
 const typeEl   = document.getElementById('typewriter');
@@ -508,39 +509,39 @@ function revealCard(){
 }
 
 /* -------------------------
-   Music controls
+   Music controls (Play / Pause)
    ------------------------- */
-let musicStarted = false;
+let isPlaying = false;
 
-musicBtn.addEventListener('click', () => {
-  if(bgMusic.paused){
-    bgMusic.volume = 0.55;
-    bgMusic.play().then(() => {
-      musicStarted = true;
-      musicBtn.classList.add('playing');
-      musicBtn.querySelector('.label').textContent = 'Pause song';
-      musicBtn.querySelector('.icon').textContent = '🎶';
-    }).catch(()=>{});
-  } else {
-    bgMusic.pause();
+function updateMusicButton(playing){
+  if(playing){
+    musicBtn.classList.add('playing');
+    musicBtn.querySelector('.label').textContent = 'Pause song';
+    musicBtn.querySelector('.icon').textContent  = '🎶';
+  }else{
     musicBtn.classList.remove('playing');
     musicBtn.querySelector('.label').textContent = 'Play song';
-    musicBtn.querySelector('.icon').textContent = '🎵';
+    musicBtn.querySelector('.icon').textContent  = '🎵';
   }
-});
+}
 
-/* Start music on first touch (mobile browsers need interaction) */
-window.addEventListener('pointerdown', function startAudioOnce(){
-  if(!musicStarted){
-    bgMusic.volume = 0.55;
-    bgMusic.play().then(() => {
-      musicStarted = true;
-      musicBtn.classList.add('playing');
-      musicBtn.querySelector('.label').textContent = 'Pause song';
-      musicBtn.querySelector('.icon').textContent = '🎶';
-    }).catch(()=>{});
+musicBtn.addEventListener('click', () => {
+  if(!isPlaying){
+    bgMusic.volume = 0.9;
+    bgMusic.play()
+      .then(() => {
+        isPlaying = true;
+        updateMusicButton(true);
+      })
+      .catch(err => {
+        console.log('Play error:', err);
+        alert('Browser blocked audio. Make sure the tab is not muted and try again.');
+      });
+  }else{
+    bgMusic.pause();
+    isPlaying = false;
+    updateMusicButton(false);
   }
-  window.removeEventListener('pointerdown', startAudioOnce);
 });
 
 /* Open heart button */
@@ -605,7 +606,7 @@ setInterval(spawnHeart, 900);
    Balloons
    ------------------------- */
 function popBalloon(balloon, x, y){
-  // tiny pop sound
+  // tiny pop sound (optional, kept small)
   try{
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
@@ -644,7 +645,7 @@ function popBalloon(balloon, x, y){
   // little note
   const note = document.createElement('div');
   note.className = 'note';
-  note.innerText = 'Buggiii ❤️';
+  note.innerText = 'Sorry Buggiii🥺';
   note.style.left = (x + 10) + 'px';
   note.style.top  = (y - 30) + 'px';
   document.body.appendChild(note);
