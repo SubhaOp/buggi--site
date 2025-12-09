@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sorry Buggi ❤️</title>
+<style>
+body {
+  margin:0;
+  background:#ffd6e7;
+  overflow:hidden;
+  font-family:'Poppins',sans-serif;
+  color:#fff;
+  text-align:center;
+}
+#musicBtn{
+  position:absolute;top:20px;right:20px;
+  padding:10px 20px;border-radius:20px;
+  background:#ff4f9a;border:none;color:white;font-size:18px;
+}
+.message{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:80%;font-size:22px;color:#b3005c;
+  background:white;padding:20px;border-radius:20px;
+  box-shadow:0 0 20px rgba(255,0,120,0.4);
+}
+.balloon{
+  position:absolute;
+  width:80px;height:100px;
+  background:#ff8ccf;
+  border-radius:50% 50% 45% 45%;
+  box-shadow:0 0 15px #ff4fae;
+  cursor:pointer;
+  animation:float 6s infinite ease-in-out;
+}
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-40px);}
+  100%{transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<button id="musicBtn">Play Music 🎵</button>
+
+<div class="message">
+<b>To Buggi don ❤️</b><br><br>
+I really love you so muchhh Buggi and don't wanna lose you because you made me smile and stronger and helped me in my lows.. I wanna grow with you — together we will conquer the world. Jokes aside, I wanna see you successful… I will always stay behind you to support you in your lows and enjoy with you in your highs. I'm not leaving you till my last breath. These are not just words — I mean it.<br><br>
+I love you so much Buggi 🥰🫂❤️<br><br>
+<b>— Your Bugga ❤️🫂</b>
+</div>
+
+<audio id="bgm" loop>
+  <source src="Perfect-(Mr-Jat.in).mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const audio = document.getElementById("bgm");
+document.getElementById("musicBtn").onclick = ()=>audio.play();
+
+// Generate balloons
+for(let i=0;i<15;i++){
+  let b=document.createElement("div");
+  b.className="balloon";
+  b.style.left=Math.random()*90+"%";
+  b.style.top=Math.random()*90+"%";
+  b.onclick=()=>alert("Buggiii ❤️");
+  document.body.appendChild(b);
+}
+</script>
+
+</body>
+</html>
